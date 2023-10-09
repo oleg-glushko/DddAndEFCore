@@ -3,11 +3,11 @@
 public class Student
 {
     public long Id { get; private set; }
-    public string Name { get; private set; }
-    public string Email { get; private set; }
-    public Course FavoriteCourse { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public virtual Course FavoriteCourse { get; private set; } = null!;
 
-    private Student()
+    protected Student()
     {
     }
 

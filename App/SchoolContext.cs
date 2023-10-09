@@ -25,7 +25,9 @@ public class SchoolContext : DbContext
                     category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
                 .AddConsole());
 
-        optionsBuilder.UseSqlServer(_connectionString);
+        optionsBuilder
+            .UseSqlServer(_connectionString)
+            .UseLazyLoadingProxies();
 
         if (_useConsoleLogger)
             optionsBuilder
