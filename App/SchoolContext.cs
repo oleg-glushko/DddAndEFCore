@@ -41,7 +41,7 @@ public class SchoolContext : DbContext
             x.Property(p => p.Id).HasColumnName(nameof(Student) + "ID");
             x.Property(p => p.Email);
             x.Property(p => p.Name);
-            x.Property(p => p.FavoriteCourseId);
+            x.HasOne(p => p.FavoriteCourse).WithMany();
         });
 
         modelBuilder.Entity<Course>(x =>

@@ -1,18 +1,14 @@
 ﻿using App;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 string connectionString = GetConnectionString();
 
 using (var context = new SchoolContext(connectionString, true))
 {
-    Student? student = context.Students.Find(1L);
-
-    if (student != null)
-    {
-        student.Name += "2";
-        student.Email += "2";
-        context.SaveChanges();
-    }
+    Student? student = context.Students
+        .Include(x => x.FavoriteCourse)
+        .SingleOrDefault(x => x.Id == 1);
 }
 
 
