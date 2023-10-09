@@ -1,18 +1,9 @@
 ﻿using App;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 string connectionString = GetConnectionString();
-ILoggerFactory loggerFactory = CreateLoggerFactory();
 
-var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
-optionsBuilder
-    .UseSqlServer(connectionString)
-    .UseLoggerFactory(loggerFactory)
-    .EnableSensitiveDataLogging();
-
-using (var context = new SchoolContext(optionsBuilder.Options))
+using (var context = new SchoolContext(connectionString, true))
 {
     Student? student = context.Students.Find(1L);
 
@@ -24,11 +15,6 @@ using (var context = new SchoolContext(optionsBuilder.Options))
     }
 }
 
-static ILoggerFactory CreateLoggerFactory() => LoggerFactory.Create(builder =>
-    builder
-       .AddFilter((category, level) =>
-            category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
-        .AddConsole());
 
 static string GetConnectionString()
 {
