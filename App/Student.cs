@@ -19,9 +19,14 @@ public class Student : Entity
         FavoriteCourse = favoriteCourse;
     }
 
-    public void EnrollIn(Course course, Grade grade)
+    public string EnrollIn(Course course, Grade grade)
     {
+        if (_enrollments.Any(x => x.Course == course))
+            return $"Already enrolled in course '{course.Name}'";
+
         var enrollment = new Enrollment(course, this, grade);
         _enrollments.Add(enrollment);
+        
+        return "OK";
     }
 }
