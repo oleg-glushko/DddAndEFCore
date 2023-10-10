@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace App;
@@ -54,7 +56,8 @@ public class SchoolContext : DbContext
         {
             x.ToTable(nameof(Course)).HasKey(k => k.Id);
             x.Property(p => p.Id).HasColumnName(nameof(Course) + "ID");
-            x.Property(p => p.Name);
+            x.Property(p => p.Name)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
         });
 
         modelBuilder.Entity<Enrollment>(x =>
@@ -66,4 +69,12 @@ public class SchoolContext : DbContext
             x.Property(p => p.Grade);
         });
     }
+
+    //public override int SaveChanges()
+    //{
+    //    foreach (EntityEntry<Course> course in ChangeTracker.Entries<Course>())
+    //        course.State = EntityState.Unchanged;
+
+    //    return base.SaveChanges();
+    //}
 }

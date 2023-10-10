@@ -2,9 +2,9 @@
 
 public class Student : Entity
 {
-    public string Name { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
-    public virtual Course FavoriteCourse { get; private set; } = null!;
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public virtual Course FavoriteCourse { get; set; } = null!;
     private readonly List<Enrollment> _enrollments = new List<Enrollment>();
     public virtual IReadOnlyList<Enrollment> Enrollments => _enrollments.ToList();
 

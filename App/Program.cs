@@ -1,7 +1,8 @@
 ﻿using App;
 using Microsoft.Extensions.Configuration;
 
-string result4 = Execute(x => x.RegisterStudent("Carl", "carl@gmail.com", 2, Grade.B));
+string result5 = Execute(x => x.EditPersonalInfo(4, "Carl 2", "carl@gmail.com", 1));
+//string result4 = Execute(x => x.RegisterStudent("Carl", "carl@gmail.com", 2, Grade.B));
 //string result3 = Execute(x => x.DisenrollStudent(1, 2));
 //string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
 //string result2 = Execute(x => x.EnrollStudent(1, 2, Grade.A));

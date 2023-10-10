@@ -1,4 +1,6 @@
-﻿namespace App;
+﻿using System.Diagnostics;
+
+namespace App;
 
 public class StudentController
 {
@@ -68,6 +70,25 @@ public class StudentController
         var student = new Student(name, email, favoriteCourse, favoriteCourseGrade);
 
         _repository.Save(student);
+        _context.SaveChanges();
+
+        return "OK";
+    }
+
+    public string EditPersonalInfo(long studentId, string name, string email, long favoriteCourseId)
+    {
+        Student? student = _repository.GetById(studentId);
+        if (student is null)
+            return "Student not found";
+
+        Course? favoriteCourse = Course.FromId(favoriteCourseId);
+        if (favoriteCourse is null)
+            return "Course not found";
+
+        student.Name = name;
+        student.Email = email;
+        student.FavoriteCourse = favoriteCourse;
+
         _context.SaveChanges();
 
         return "OK";
