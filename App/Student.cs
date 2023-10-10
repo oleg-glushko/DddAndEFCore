@@ -3,7 +3,7 @@
 public class Student : Entity
 {
     public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
+    public Email Email { get; set; } = null!;
     public virtual Course FavoriteCourse { get; set; } = null!;
     private readonly List<Enrollment> _enrollments = new List<Enrollment>();
     public virtual IReadOnlyList<Enrollment> Enrollments => _enrollments.ToList();
@@ -12,7 +12,7 @@ public class Student : Entity
     {
     }
 
-    public Student(string name, string email, Course favoriteCourse, Grade favoriteCourseGrade) : this()
+    public Student(string name, Email email, Course favoriteCourse, Grade favoriteCourseGrade) : this()
     {
         Name = name;
         Email = email;
