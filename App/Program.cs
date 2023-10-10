@@ -1,7 +1,7 @@
 ﻿using App;
 using Microsoft.Extensions.Configuration;
 
-string result2 = Execute(x => x.AddEnrollment(1, 2, Grade.A));
+string result2 = Execute(x => x.EnrollStudent(1, 2, Grade.A));
 string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
 
 ; // no-op for a breakpoint

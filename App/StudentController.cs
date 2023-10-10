@@ -22,7 +22,7 @@ public class StudentController
         return student.FavoriteCourse == course ? "Yes" : "No";
     }
 
-    public string AddEnrollment(long studentId, long courseId, Grade grade)
+    public string EnrollStudent(long studentId, long courseId, Grade grade)
     {
         Student? student = _context.Students.Find(studentId);
         if (student is null)
@@ -32,7 +32,7 @@ public class StudentController
         if (course is null)
             return "Course not found";
 
-        student.Enrollments.Add(new Enrollment(course, student, grade));
+        student.EnrollIn(course, grade);
 
         _context.SaveChanges();
 
