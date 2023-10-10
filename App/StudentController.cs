@@ -40,4 +40,21 @@ public class StudentController
 
         return result;
     }
+
+    public string DisenrollStudent(long studentId, long courseId)
+    {
+        Student? student = _repository.GetById(studentId);
+        if (student is null)
+            return "Student not found";
+
+        Course? course = Course.FromId(courseId);
+        if (course is null)
+            return "Course not found";
+
+        student.Disenroll(course);
+
+        _context.SaveChanges();
+
+        return "OK";
+    }
 }

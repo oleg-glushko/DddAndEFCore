@@ -45,6 +45,8 @@ public class SchoolContext : DbContext
             x.Property(p => p.Name);
             x.HasOne(p => p.FavoriteCourse).WithMany();
             x.HasMany(p => p.Enrollments).WithOne(p => p.Student)
+                // it isn't required as the Enrollments property isn't nullable
+                // .OnDelete(DeleteBehavior.Cascade)
                 .Metadata.PrincipalToDependent?.SetPropertyAccessMode(PropertyAccessMode.Field);
         });
 
