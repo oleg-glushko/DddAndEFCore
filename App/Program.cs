@@ -1,9 +1,10 @@
 ﻿using App;
 using Microsoft.Extensions.Configuration;
 
-string result3 = Execute(x => x.DisenrollStudent(1, 2));
-string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
-string result2 = Execute(x => x.EnrollStudent(1, 2, Grade.A));
+string result4 = Execute(x => x.RegisterStudent("Carl", "carl@gmail.com", 2, Grade.B));
+//string result3 = Execute(x => x.DisenrollStudent(1, 2));
+//string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
+//string result2 = Execute(x => x.EnrollStudent(1, 2, Grade.A));
 
 ; // no-op for a breakpoint
 

@@ -12,11 +12,13 @@ public class Student : Entity
     {
     }
 
-    public Student(string name, string email, Course favoriteCourse) : this()
+    public Student(string name, string email, Course favoriteCourse, Grade favoriteCourseGrade) : this()
     {
         Name = name;
         Email = email;
         FavoriteCourse = favoriteCourse;
+
+        EnrollIn(favoriteCourse, favoriteCourseGrade);
     }
 
     public string EnrollIn(Course course, Grade grade)
