@@ -1,7 +1,25 @@
 ﻿namespace App;
 
-public class Course
+public class Course : Entity
 {
-    public long Id { get; set; }
-    public string Name { get; set; }
+    public static readonly Course Chemistry = new Course(2, "Chemistry");
+    public static readonly Course Calculus = new Course(1, "Calculus");
+
+    public static readonly Course[] AllCourses = { Calculus, Chemistry };
+
+    public string Name { get; } = string.Empty;
+
+    protected Course()
+    {
+    }
+
+    private Course(long id, string name) : base(id)
+    {
+        Name = name;
+    }
+
+    public static Course? FromId(long id)
+    {
+        return AllCourses.SingleOrDefault(x => x.Id == id);
+    }
 }

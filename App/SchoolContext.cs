@@ -44,6 +44,7 @@ public class SchoolContext : DbContext
             x.Property(p => p.Email);
             x.Property(p => p.Name);
             x.HasOne(p => p.FavoriteCourse).WithMany();
+            x.HasMany(p => p.Enrollments).WithOne(p => p.Student);
         });
 
         modelBuilder.Entity<Course>(x =>
@@ -51,6 +52,15 @@ public class SchoolContext : DbContext
             x.ToTable(nameof(Course)).HasKey(k => k.Id);
             x.Property(p => p.Id).HasColumnName(nameof(Course) + "ID");
             x.Property(p => p.Name);
+        });
+
+        modelBuilder.Entity<Enrollment>(x =>
+        {
+            x.ToTable(nameof(Enrollment)).HasKey(k => k.Id);
+            x.Property(p => p.Id).HasColumnName(nameof(Enrollment) + "ID");
+            x.HasOne(p => p.Student).WithMany(p => p.Enrollments);
+            x.HasOne(p => p.Course).WithMany();
+            x.Property(p => p.Grade);
         });
     }
 }
