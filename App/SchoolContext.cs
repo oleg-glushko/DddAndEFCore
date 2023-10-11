@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace App;
 
 public class SchoolContext : DbContext
 {
+    private static readonly Type[] EnumerationTypes = { typeof(Course), typeof(Suffix) };
+
     private readonly string _connectionString;
     private readonly bool _useConsoleLogger;
 
@@ -45,12 +46,12 @@ public class SchoolContext : DbContext
             x.Property(p => p.Id).HasColumnName(nameof(Student) + "ID");
             x.Property(p => p.Email)
                 .HasConversion(p => p.Value, p => Email.Create(p).Value);
-            // This doesn't work in .NET 8 RC1 & RC2 with Lazy Loading
-            // see https://github.com/dotnet/efcore/issues/32008
-            x.ComplexProperty(p => p.Name, p =>
+            x.OwnsOne(p => p.Name, p =>
             {
+                p.Property<long?>("NameSuffixID").HasColumnName("NameSuffixID");
                 p.Property(pp => pp.First).HasColumnName(nameof(Name.First) + "Name");
                 p.Property(pp => pp.Last).HasColumnName(nameof(Name.Last) + "Name");
+                p.HasOne(pp => pp.Suffix).WithMany().HasForeignKey("NameSuffixID").IsRequired(false);
             });
             x.HasOne(p => p.FavoriteCourse).WithMany();
             x.HasMany(p => p.Enrollments).WithOne(p => p.Student)
@@ -59,12 +60,18 @@ public class SchoolContext : DbContext
                 .Metadata.PrincipalToDependent?.SetPropertyAccessMode(PropertyAccessMode.Field);
         });
 
+        modelBuilder.Entity<Suffix>(x =>
+        {
+            x.ToTable(nameof(Suffix)).HasKey(k => k.Id);
+            x.Property(p => p.Id).HasColumnName(nameof(Suffix) + "ID");
+            x.Property(p => p.Name);
+        });
+
         modelBuilder.Entity<Course>(x =>
         {
             x.ToTable(nameof(Course)).HasKey(k => k.Id);
             x.Property(p => p.Id).HasColumnName(nameof(Course) + "ID");
-            x.Property(p => p.Name)
-                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+            x.Property(p => p.Name);
         });
 
         modelBuilder.Entity<Enrollment>(x =>
@@ -77,11 +84,14 @@ public class SchoolContext : DbContext
         });
     }
 
-    //public override int SaveChanges()
-    //{
-    //    foreach (EntityEntry<Course> course in ChangeTracker.Entries<Course>())
-    //        course.State = EntityState.Unchanged;
+    public override int SaveChanges()
+    {
+        IEnumerable<EntityEntry> enumerationEntries = ChangeTracker.Entries()
+            .Where(x => EnumerationTypes.Contains(x.Entity.GetType()));
 
-    //    return base.SaveChanges();
-    //}
+        foreach (EntityEntry enumerationEntry in enumerationEntries)
+            enumerationEntry.State = EntityState.Unchanged;
+
+        return base.SaveChanges();
+    }
 }

@@ -2,7 +2,7 @@
 
 public class Student : Entity
 {
-    public Name Name { get; private set; } = null!; // a virtual keyword isn't needed for a ComplexType
+    public Name Name { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
     public virtual Course FavoriteCourse { get; private set; } = null!;
     private readonly List<Enrollment> _enrollments = new List<Enrollment>();

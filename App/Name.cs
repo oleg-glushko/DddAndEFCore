@@ -6,18 +6,20 @@ public class Name : ValueObject
 {
     public string First { get; } = string.Empty;
     public string Last { get; } = string.Empty;
+    public virtual Suffix? Suffix { get; set; }
 
     protected Name()
     {
     }
 
-    private Name(string first, string last)
+    private Name(string first, string last, Suffix? suffix)
     {
         First = first;
         Last = last;
+        Suffix = suffix;
     }
 
-    public static Result<Name> Create(string firstName, string lastName)
+    public static Result<Name> Create(string firstName, string lastName, Suffix? suffix)
     {
         if (string.IsNullOrWhiteSpace(firstName))
             return Result.Failure<Name>("First name should not be empty");
@@ -32,12 +34,13 @@ public class Name : ValueObject
         if (firstName.Length > 200)
             return Result.Failure<Name>("Last name is too long");
 
-        return Result.Success(new Name(firstName, lastName));
+        return Result.Success(new Name(firstName, lastName, suffix));
     }
 
     protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return First;
         yield return Last;
+        yield return (IComparable)(Suffix ?? Suffix.Empty);
     }
 }
