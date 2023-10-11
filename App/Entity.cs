@@ -2,6 +2,8 @@
 
 public abstract class Entity
 {
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
 
     public long Id { get; }
 
@@ -12,6 +14,16 @@ public abstract class Entity
     protected Entity(long id)
     {
         Id = id;
+    }
+
+    protected void RaiseDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
     }
 
     public override bool Equals(object? obj)

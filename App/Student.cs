@@ -44,6 +44,9 @@ public class Student : Entity
 
     public void EditPersonalInfo(Name name, Email email, Course favoriteCourse)
     {
+        if (Email != email)
+            RaiseDomainEvent(new StudentEmailChangedEvent(Id, email));
+
         Name = name;
         Email = email;
         FavoriteCourse = favoriteCourse;
