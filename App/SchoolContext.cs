@@ -45,7 +45,13 @@ public class SchoolContext : DbContext
             x.Property(p => p.Id).HasColumnName(nameof(Student) + "ID");
             x.Property(p => p.Email)
                 .HasConversion(p => p.Value, p => Email.Create(p).Value);
-            x.Property(p => p.Name);
+            // This doesn't work in .NET 8 RC1 & RC2 with Lazy Loading
+            // see https://github.com/dotnet/efcore/issues/32008
+            x.ComplexProperty(p => p.Name, p =>
+            {
+                p.Property(pp => pp.First).HasColumnName(nameof(Name.First) + "Name");
+                p.Property(pp => pp.Last).HasColumnName(nameof(Name.Last) + "Name");
+            });
             x.HasOne(p => p.FavoriteCourse).WithMany();
             x.HasMany(p => p.Enrollments).WithOne(p => p.Student)
                 // it isn't required as the Enrollments property isn't nullable

@@ -60,26 +60,31 @@ public class StudentController
         return "OK";
     }
 
-    public string RegisterStudent(string name, string email, long favoriteCourseId, Grade favoriteCourseGrade)
+    public string RegisterStudent(string firstName, string lastName, string email,
+        long favoriteCourseId, Grade favoriteCourseGrade)
     {
 
         Course? favoriteCourse = Course.FromId(favoriteCourseId);
         if (favoriteCourse is null)
             return "Course not found";
 
-        Result<Email> result = Email.Create(email);
-        if (result.IsFailure)
-            return result.Error;
+        Result<Email> emailResult = Email.Create(email);
+        if (emailResult.IsFailure)
+            return emailResult.Error;
 
-        var student = new Student(name, result.Value, favoriteCourse, favoriteCourseGrade);
+        Result<Name> nameResult = Name.Create(firstName, lastName);
+        if (nameResult.IsFailure)
+            return nameResult.Error;
 
+        var student = new Student(nameResult.Value, emailResult.Value, favoriteCourse, favoriteCourseGrade);
         _repository.Save(student);
+        
         _context.SaveChanges();
 
         return "OK";
     }
 
-    public string EditPersonalInfo(long studentId, string name, string email, long favoriteCourseId)
+    public string EditPersonalInfo(long studentId, string firstName, string lastName, string email, long favoriteCourseId)
     {
         Student? student = _repository.GetById(studentId);
         if (student is null)
@@ -89,13 +94,20 @@ public class StudentController
         if (favoriteCourse is null)
             return "Course not found";
 
-        Result<Email> result = Email.Create(email);
-        if (result.IsFailure)
-            return result.Error;
+        Result<Email> emailResult = Email.Create(email);
+        if (emailResult.IsFailure)
+            return emailResult.Error;
 
-        student.Name = name;
-        student.Email = result.Value;
-        student.FavoriteCourse = favoriteCourse;
+        Result<Name> nameResult = Name.Create(firstName, lastName);
+        if (nameResult.IsFailure)
+            return nameResult.Error;
+
+        // The next code works well for a ComplexProperty without the resort to .Copy()
+        //Student? bob = _repository.GetById(2L);
+        //student.Name = bob?.Name ?? student.Name;
+        //student.Email = bob?.Email ?? student.Email;
+
+        student.EditPersonalInfo(nameResult.Value, emailResult.Value, favoriteCourse);
 
         _context.SaveChanges();
 

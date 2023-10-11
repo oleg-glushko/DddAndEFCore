@@ -2,9 +2,9 @@
 
 public class Student : Entity
 {
-    public string Name { get; set; } = string.Empty;
-    public Email Email { get; set; } = null!;
-    public virtual Course FavoriteCourse { get; set; } = null!;
+    public Name Name { get; private set; } = null!; // a virtual keyword isn't needed for a ComplexType
+    public Email Email { get; private set; } = null!;
+    public virtual Course FavoriteCourse { get; private set; } = null!;
     private readonly List<Enrollment> _enrollments = new List<Enrollment>();
     public virtual IReadOnlyList<Enrollment> Enrollments => _enrollments.ToList();
 
@@ -12,7 +12,7 @@ public class Student : Entity
     {
     }
 
-    public Student(string name, Email email, Course favoriteCourse, Grade favoriteCourseGrade) : this()
+    public Student(Name name, Email email, Course favoriteCourse, Grade favoriteCourseGrade) : this()
     {
         Name = name;
         Email = email;
@@ -40,5 +40,12 @@ public class Student : Entity
             return;
 
         _enrollments.Remove(enrollment);
+    }
+
+    public void EditPersonalInfo(Name name, Email email, Course favoriteCourse)
+    {
+        Name = name;
+        Email = email;
+        FavoriteCourse = favoriteCourse;
     }
 }
